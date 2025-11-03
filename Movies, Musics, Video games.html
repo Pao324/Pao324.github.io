@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pao Store</title>
+    <link rel="icon" type="image/x-icon" href="bun.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Bootstrap Link -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- CSS button style -->
+    <style>
+     .chat-button {
+           position: fixed;              
+           bottom: 20px;
+           right: 20px;
+           width: 60px;
+           height: 60px;
+           border-radius: 50%;          
+           background-color: #0d6efd;
+           color: white;
+           border: none;
+           font-size: 28px;              
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+           z-index: 1000;                    
+     
+          
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           cursor: pointer;
+    }
+
+		
+    .chat-window {
+         
+     
+           position: fixed;
+           bottom: 90px;                  
+           right: 20px;
+           width: 300px;
+           max-height: 400px;
+           background-color: white;
+           border-radius: 10px;
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+           z-index: 1000;
+           flex-direction: column;  
+
+			
+           display: flex;
+
+          
+           opacity: 0; 
+           transform: translateY(20px); 
+           visibility: hidden; 
+           transition: all 0.3s ease; 
+    }
+
+		
+    .chat-window.show {
+           opacity: 1; 
+           transform: translateY(0); 
+           visibility: visible;       
+    }
+ 
+   /* drop down start */
+.dropdown-menu {
+    display: block; 
+    opacity: 0; 
+    visibility: hidden; 
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    pointer-events: none; 
+}
+
+.dropdown-menu.show {
+    opacity: 1; 
+    visibility: visible;
+    transform: translateY(0); 
+    pointer-events: auto; 
+}
+
+/* Product picture zoom in */
+.card {
+    overflow: hidden; 
+}
+
+
+.card .card-img-top {
+    transition: transform 0.4s ease; 
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.1); 
+}
+
+/* Fix product picture size */
+.row-cols-1 .card .card-img-top {
+    height: 300px;           
+    object-fit: cover;       
+    object-position: center; 
+}
+
+/* Fix chat dissappear in footer */
+footer.bg-dark {
+    position: relative; 
+    z-index: 999;       
+}
+    
+  </style>
+    </head>
+<body class="bg-light">
+
+    <!-- =====================================================  NAVBAR START =============================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!"><img src="bun.png"> Pao Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="offcanvas" href="#sidebarOffcanvas" role="button" aria-controls="sidebarOffcanvas">
+                            <i class="bi bi-list"></i> Categories
+                        </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Info</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="address.html">Address</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="payment.html">Payment</a></li>
+                            
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Search Form -->
+                <form class="d-flex me-3" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Find your wants !" aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+
+                <!-- LOGIN BUTTON -->
+                <a class="btn btn-outline-light me-3" href="log in page.html">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Login
+                </a>
+
+                <!-- Cart Form -->
+                <div class="d-flex">
+                    <button class="btn btn-outline-light" 
+                        type="button" 
+                        data-bs-toggle="popover" 
+                        data-bs-trigger="hover focus" 
+                        data-bs-placement="bottom" 
+                        data-bs-html="true" 
+                        data-bs-content="<div class='text-center p-2'>
+                                            <i class='bi bi-basket3' style='font-size: 3rem; color: #adb5bd;'></i>
+                                            <p class='mt-2 mb-0 text-muted'>No any item here</p>
+                                        </div>">
+                        
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span id="cart-badge" class="badge bg-light text-dark ms-1 rounded-pill">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================== NAVBAR END ============================================================== -->
+
+    <!-- ====================================================== SIDEBAR START ============================================================== -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">Categories<hr class="w-49 mx-auto"/></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group">
+                <a href="index.html" class="list-group-item list-group-item-action" aria-current="true">
+                    Home page
+                </a>
+                <a href="Mobilbes, Computers.html" class="list-group-item list-group-item-action">Mobilbes, Computers</a>
+                <a href="TV, Appliances, Electronics.html" class="list-group-item list-group-item-action">TV, Appliances, Electronics</a>
+                <a href="Men's Fashion.html" class="list-group-item list-group-item-action">Men's Fashion</a>
+                <a href="Women Fashion.html" class="list-group-item list-group-item-action">Women Fashion</a>
+                <a href="Home, Kitchen, Pets.html" class="list-group-item list-group-item-action">Home, Kitchen, Pets</a>
+                <a href="Beauty, Health, Grocery.html" class="list-group-item list-group-item-action">Beauty, Health, Grocery</a>
+                <a href="Sports, Fitness, Bags, Luggage.html" class="list-group-item list-group-item-action">Sports, Fitness, Bags, Luggage</a>
+                <a href="Toys, Baby Products, Kid's Fashion.html" class="list-group-item list-group-item-action">Toys, Baby Products, Kid's Fashion</a>
+                <a href="Cars, Motorbike, Industrial.html" class="list-group-item list-group-item-action">Cars, Motorbike, Industrial</a>
+                <a href="Books.html" class="list-group-item list-group-item-action">Books</a>
+                <a href="Movies, Musics, Video games.html" class="list-group-item list-group-item-action active">Movies, Musics, Video games</a>
+                <a href="Gift card.html" class="list-group-item list-group-item-action">Gift card</a>
+                <a href="HTML and CSS Courses.html" class="list-group-item list-group-item-action">HTML and CSS Courses</a>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= SIDEBAR END ========================================================= -->
+
+<!-- ======================================================== Ads slides start============================================================ -->
+
+<section class="py-4 mt-3" style="background-color: white;"> <div class="container px-4 px-lg-5">
+        <div class="row gx-5 align-items-stretch">
+
+            <div class="col-lg-9 mb-4 mb-lg-0">
+                <div id="heroCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    </div>
+                    
+                    <div class="carousel-inner rounded h-100">
+                        <div class="carousel-item active h-100">
+                            <img src="slide-firstlaunch.png" class="d-block w-100 h-100" style="object-fit: cover;"  alt="Crybaby Promo">
+                        </div>
+                        
+                        <div class="carousel-item h-100">
+                            <img src="slide-halloweensales.png" class="d-block w-100 h-100" style="object-fit: cover;"  alt="Promo 2">
+                        </div>
+                    </div>
+                    
+                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide-to="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide-to="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-3 d-none d-lg-block"> <a href="#" class="card h-100">
+                    <img src="slide-welcome.png" class="card-img-top h-100" style="object-fit: cover;" alt="Download App">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ====================================================== Ads slides end ========================================================== -->
+
+    <!-- ============================================= Store product display grid start ============================================== -->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-6 text-center">
+                    <h2 class="fw-bolder">You may like</h2>
+                    <hr class="w-25 mx-auto" /> </div>
+            </div>
+
+            <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center">
+                <!-- FIRST BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Black Myth Wukong for Playstation 5.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Black Myth Wukong for Playstation 5</h5>
+                                $40.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SECOND BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                        <img class="card-img-top" src="mmv-Nintendo Pokemon Lets Go Pikachu,Multiplayer, Kids.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Nintendo Pokemon Lets Go Pikachu,Multiplayer, Kids</h5>
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <i class="bi-star-fill"></i>
+                                    <i class="bi-star-fill"></i>
+                                    <i class="bi-star-fill"></i>
+                                    <i class="bi-star-fill"></i>
+                                    <i class="bi-star-half"></i>
+                                </div>
+                                <span class="text-muted text-decoration-line-through">$50.00</span>
+                                $35.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- THIRD BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Ps5 Avatar Frontiers of Pandora.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Avatar Frontiers of Pandora</h5>
+                                $120.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FORTH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Ps5 Demon Slayer Kimetsu Hinokami Chronicles 2.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Ps5 Demon Slayer Kimetsu Hinokami Chronicles 2</h5>
+                                $75.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIFTH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Rockstar Games PS5 Video Game ConsoleGrand Theft Auto.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Rockstar Games PS5 Video Game ConsoleGrand Theft Auto</h5>
+                                $90.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SIXTH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Sony DualSense Wireless Controller White (PlayStation 5).jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Sony DualSense Wireless Controller White (PlayStation 5)</h5>
+                                $25.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SEVENTH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Sony Ghost of Tsushima Director's Cut PS5 Game.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Sony Ghost of Tsushima Director's Cut PS5 Game</h5>
+                                $60.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- EIGHTH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                        <img class="card-img-top" src="mmv-Sony Ps5 Spiderman 2 Standard Edn..jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Sony Ps5 Spiderman 2 Standard Edn.</h5>
+                                <span class="text-muted text-decoration-line-through">$100.00</span>
+                                $80.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- NINETH BOX -->
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="mmv-Stray for Nintendo Switch.jpg" alt="Product Image">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">Stray for Nintendo Switch</h5>
+                                $15.00
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to Cart</a></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================== Store product display grid end ================================================ -->
+
+<!-- ============================================== FOOTER START (Copy right and Chat button) ========================================== -->
+    <footer class="py-5 bg-dark text-white">
+    <div class="container px-4 px-lg-5">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-4"><img src="bun.png"> Pao Store </h5>
+                <p class="small ">
+                    Welcome to Pao Store <br>
+                    We have the best product you'll ever find
+                </p>
+            </div>
+
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-4">Links</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="#!" class="text-white text-decoration-none small">About Us</a></li>
+                    <li><a href="#!" class="text-white text-decoration-none small">Contact</a></li>
+                    <li><a href="#!" class="text-white text-decoration-none small">FAQ</a></li>
+                    <li><a href="#!" class="text-white text-decoration-none small">Return Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-4">Follow Us</h5>
+                <div>
+                    <a href="#!" class="btn btn-outline-light btn-floating m-1" role="button">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#!" class="btn btn-outline-light btn-floating m-1" role="button">
+                        <i class="bi bi-twitter-x"></i>
+                    </a>
+                    <a href="#!" class="btn btn-outline-light btn-floating m-1" role="button">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#!" class="btn btn-outline-light btn-floating m-1" role="button">
+                        <i class="bi bi-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            </div>
+
+        </div>
+
+        <hr class="my-4" style="border-color: #495057;">
+        
+        <div class="text-center small text-white-50">
+            Copyright &copy; 2025 Pao's store. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<button class="chat-button" id="toggleChatBtn">
+    <i class="bi bi-chat-dots-fill"></i>
+</button>
+
+<div class="chat-window card" id="chatWindow">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-2">
+        <h6 class="mb-0">Pao Store - Support</h6>
+        <button type="button" class="btn-close btn-close-white" id="closeChatBtn" aria-label="Close"></button>
+    </div>
+    <div class="card-body p-3" style="overflow-y: auto; height: 300px;">
+        <div class="d-flex mb-2">
+            <div class="p-2 bg-light rounded">
+                Hello! Do you need any help?
+            </div>
+        </div>
+    </div>
+    <div class="card-footer p-2">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="ํType...">
+            <button class="btn btn-primary" type="button"><i class="bi bi-send"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================================== FOOTER END (Copy right and Chat button) ============================================== -->
+
+<!-- Bootstrap link -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- ================================================== Java Script Start =========================================================== -->
+<script>
+
+    const toggleChatBtn = document.getElementById('toggleChatBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+
+    
+    toggleChatBtn.addEventListener('click', () => {
+        chatWindow.classList.toggle('show');
+    });
+
+    
+    closeChatBtn.addEventListener('click', () => {
+        chatWindow.classList.remove('show');
+    });
+
+    
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+
+</script>
+
+<!-- ================================================== Java Script End =========================================================== -->
+
+
+</body>
+</html>
